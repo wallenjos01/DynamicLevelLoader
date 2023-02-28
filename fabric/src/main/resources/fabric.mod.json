@@ -1,0 +1,25 @@
+{
+    "schemaVersion": 1,
+    "id": "${id}",
+    "version": "${version}",
+    "environment": "*",
+    "entrypoints": { },
+    "mixins": [
+        "dynamiclevelloader.mixins.json"
+    ],
+    "accessWidener": "dynamiclevelloader.accesswidener",
+    "depends": {
+        "midnightcore": "*"
+    },
+    "name": "${name}",
+    "description": "${description}",
+    "contact": {
+        "homepage": "https://wallentines.org/"
+    },
+    "authors": [
+        {
+            "name": "M1dnight_Ninja"
+        }
+    ],
+    "license": "LGPL"
+}

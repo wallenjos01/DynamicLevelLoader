@@ -1,0 +1,69 @@
+
+group = project.group
+version = project.version
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    archivesBaseName = "${project.mod_id}-${project.name}"
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url 'https://maven.wallentines.org/'
+        }
+        maven {
+            url "https://libraries.minecraft.net/"
+        }
+    }
+
+    dependencies {
+
+        compileOnly 'org.apache.logging.log4j:log4j-api:2.17.0'
+        compileOnly 'org.wallentines:midnightlib:1.0-SNAPSHOT'
+        compileOnly 'org.wallentines.midnightcore:api:1.0-SNAPSHOT'
+        compileOnly 'org.wallentines.midnightcore:common:1.0-SNAPSHOT'
+    }
+
+    java {
+        withSourcesJar()
+    }
+
+	tasks.withType(AbstractArchiveTask) {
+		preserveFileTimestamps = false
+		reproducibleFileOrder = true
+	}
+
+	tasks.withType(GenerateModuleMetadata) {
+		enabled = false
+	}
+
+    test {
+        useJUnit()
+        maxHeapSize = '1G'
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                groupId = "${project.group}.${project.mod_id}"
+            }
+        }
+        repositories {
+            maven {
+                if (project.hasProperty("pubUrl")) {
+                    url = project.pubUrl as String
+                    credentials {
+                        username project.pubUser as String
+                        password project.pubPass as String
+                    }
+                }
+            }
+        }
+    }
+
+}

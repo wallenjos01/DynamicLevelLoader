@@ -1,0 +1,88 @@
+// Loom documentation: https://fabricmc.net/wiki/documentation:fabric_loom
+// fabric.mod.json documentation: https://fabricmc.net/wiki/documentation:fabric_mod_json
+
+plugins {
+
+    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+
+}
+
+configurations {
+    shade
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+shadowJar {
+
+    archiveClassifier.set('dev')
+    configurations = [project.configurations.shade]
+}
+tasks.assemble.dependsOn tasks.shadowJar
+
+repositories {
+
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+dependencies {
+
+    minecraft "com.mojang:minecraft:${project.fabric_minecraft_version}"
+    mappings loom.officialMojangMappings()
+    
+    modApi "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modApi 'org.wallentines:midnightlib:1.0-SNAPSHOT'
+
+    modApi 'org.wallentines.midnightcore:fabric:1.0-SNAPSHOT'
+
+    implementation project(':api')
+    implementation project(':common')
+
+    shade project(':api')
+    shade project(':common')
+
+}
+
+loom {
+    runs {
+        client {
+            runDir = "run/client"
+            ideConfigGenerated = false
+            client()
+        }
+        server {
+            runDir = "run/server"
+            ideConfigGenerated = false
+            server()
+        }
+    }
+    interfaceInjection {
+		enableDependencyInterfaceInjection = true
+	}
+    accessWidenerPath = file("src/main/resources/dynamiclevelloader.accesswidener")
+}
+
+processResources {
+
+    Map<String, ?> ex = new HashMap<>()
+    ex.put("version", project.version)
+    ex.put("id", project.mod_id)
+    ex.put("name", project.mod_name)
+    ex.put("target", project.name)
+    ex.put("description", project.description)
+    ex.put("group", project.group)
+    ex.put("minecraftVersion", project.fabric_minecraft_version)
+    ex.put("fabricLoader", project.fabric_loader_version)
+
+    filesMatching("fabric.mod.json") {
+        expand(ex)
+    }
+}
+
+remapJar {
+    dependsOn tasks.shadowJar
+    inputFile.set(tasks.shadowJar.archiveFile)
+    addNestedDependencies.set(true)
+}

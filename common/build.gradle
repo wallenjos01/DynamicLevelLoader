@@ -1,0 +1,20 @@
+repositories {
+
+    maven {
+        url "https://libraries.minecraft.net/"
+    }
+}
+
+dependencies {
+
+    compileOnly 'com.mojang:authlib:2.1.28'
+    compileOnly project(":api")
+
+    testImplementation 'junit:junit:4.13.2'
+}
+
+test {
+
+    useJUnit()
+    maxHeapSize = '1G'
+}
