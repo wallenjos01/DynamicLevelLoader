@@ -466,6 +466,11 @@ public class DynamicLevelContext {
             return config.getDimensionKey(LevelStem.END);
         }
 
+        public DynamicLevelContext getContext() {
+
+            return DynamicLevelContext.this;
+        }
+
         @Override
         public long getSeed() {
             return config.getSeed();
