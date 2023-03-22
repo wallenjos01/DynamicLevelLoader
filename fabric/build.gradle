@@ -27,6 +27,13 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
+sourceSets {
+    testmod {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
 dependencies {
 
     minecraft "com.mojang:minecraft:${project.fabric_minecraft_version}"
@@ -43,28 +50,46 @@ dependencies {
     shade project(':api')
     shade project(':common')
 
+    testmodImplementation sourceSets.main.output
 }
 
 loom {
     runs {
         client {
+            client()
             runDir = "run/client"
             ideConfigGenerated = false
-            client()
+            name = "Run Client"
+            source sourceSets.testmod
         }
         server {
+            server()
             runDir = "run/server"
             ideConfigGenerated = false
-            server()
+            name = "Run Server"
+            source sourceSets.testmod
         }
     }
     interfaceInjection {
 		enableDependencyInterfaceInjection = true
 	}
+    splitEnvironmentSourceSets()
+
     accessWidenerPath = file("src/main/resources/dynamiclevelloader.accesswidener")
 }
 
-processResources {
+allprojects.each {p ->
+
+    loom.mods.register(p.name) {
+        sourceSet p.sourceSets.main
+    }
+
+    loom.mods.register(p.name + "-testmod") {
+        sourceSet p.sourceSets.testmod
+    }
+}
+
+tasks.withType(ProcessResources).configureEach {
 
     Map<String, ?> ex = new HashMap<>()
     ex.put("version", project.version)
@@ -80,6 +105,7 @@ processResources {
         expand(ex)
     }
 }
+
 
 remapJar {
     dependsOn tasks.shadowJar

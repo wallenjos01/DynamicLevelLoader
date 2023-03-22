@@ -1,0 +1,27 @@
+{
+    "schemaVersion": 1,
+    "id": "${id}-testmod",
+    "version": "${version}",
+    "environment": "*",
+    "entrypoints": {
+        "midnightcore": [
+            "${group}.dll.testmod.Testmod"
+        ]
+    },
+    "mixins": [],
+    "depends": {
+        "midnightcore": "*",
+        "${id}": "${version}"
+    },
+    "name": "${name}",
+    "description": "${description}",
+    "contact": {
+        "homepage": "https://wallentines.org/"
+    },
+    "authors": [
+        {
+            "name": "M1dnight_Ninja"
+        }
+    ],
+    "license": "LGPL"
+}

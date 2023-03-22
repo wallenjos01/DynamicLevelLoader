@@ -145,6 +145,10 @@ public class DynamicLevelContext {
         return levels.get(key);
     }
 
+    public WorldStem getWorldStem() {
+        return worldStem;
+    }
+
     public void loadAllDimensions(DynamicLevelCallback callback) {
 
         // Initialize the level data if not done already

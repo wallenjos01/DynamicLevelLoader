@@ -10,6 +10,7 @@
     "AccessorMinecraftServer",
     "AccessorServerLevel",
     "AccessorWorldPreset",
+    "MixinDifficultyCommand",
     "MixinGameruleCommand",
     "MixinLevelStorageAccess",
     "MixinMinecraftServer",
